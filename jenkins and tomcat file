@@ -1,0 +1,98 @@
+Jenkins:
+=========================
+sudo su -
+Setup jenkins Server 
+EC2 server launch
+DOwnload jenkins -> key pair
+sudo amazon-linux-extras
+sudo amazon-linux-extras install epel
+sudo amazon-linux-extras install java-openjdk11
+yum install jenkins
+service jenkins status -> inactive
+service jenkins start -> start
+Security group : Access UI using port 8080
+Ec2 public ip:8080 webbrowser
+
+
+Run !st Jenkins Job
+Integrate git with jenkins
+Run jenkins job to pull code from github
+
+
+Maven:
+=====================================
+integrate maven with jenkins
+wget https://dlcdn.apache.org/maven/maven-3/3.9.8/binaries/apache-maven-3.9.8-bin.tar.gz
+tar -xvzf apache-maven-3.9.8-bin.tar.gz
+update .bash profile
+cd ~
+ll -a hidden files
+M2_HOME=opt/maven where apache maven installed
+M2=opt/maven/bin binary directory 
+JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.23.0.9-2.amzn2.0.1.x86_64
+
+find / -name jvm
+/usr/lib/jvm  - inside this jdk
+or
+find / -name java-11*
+
+echo $PATH
+
+source .bash_profile - reload or logout login root
+
+install maven plugin - in jenkins gui (maven integration)
+global tool configuration 
+install java
+
+maven lifecycle or lifecycle references
+
+Tomcat:
+=========
+Setup tomcat
+launch ec2 instance
+install java
+install tomcat from website using 
+wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.25/bin/apache-tomcat-10.1.25.tar.gz
+tar -xvzf apache-tomcat-10.1.25.tar.gz
+go to bin start tomcat
+access web using 8080
+
+integrate tomcat with jenkins
+create ec2 instance
+hostnamectl set-hostname tomcat
+install java
+configure tomcat
+tar -xvzf apache-tomcat-10.1.25.tar.gz
+start tomcat
+access web using 8080
+login to tomcat server using public_ip:8080 will see access denied in manage apps
+find / -name context.xml
+edit these
+/opt/tomcat/webapps/host-manager/META-INF/context.xml
+/opt/tomcat/webapps/manager/META-INF/context.xml
+
+update it
+<!--  --> where there is a block like 127. **
+<!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+  allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
+
+stop and start the service
+below can also be used to start and stop the servers
+ln -s /opt/tomcat/bin/startup.sh /usr/local/bin/tomcatup
+ln -s /opt/tomcat/bin/shutdown.sh /usr/local/bin/tomcatdown
+
+Now you will ask to give username and password in tomcat server for that need to Add users:
+go to conf/tomcat-users.xml update with below code at the bottom before </tomcat-users>
+
+ <role rolename="manager-gui"/>
+ <role rolename="manager-script"/>
+ <role rolename="manager-jmx"/>
+ <role rolename="manager-status"/>
+ <user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"/>
+ <user username="deployer" password="deployer" roles="manager-script"/>
+ <user username="tomcat" password="s3cret" roles="manager-gui"/>
+
+save and quit :wq!
+Restart serivce and try to login to tomcat application from the browser
+Next go to jenkins manage jenkins>plugins-> install deploy to container and then again go to manage jenkins in security select credentials select system credentials and click on global credentials and add your credentials here.
+In our username and password are deployer and for id and desc you can give same deployer or tomcat
