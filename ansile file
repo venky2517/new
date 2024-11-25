@@ -1,0 +1,88 @@
+Ansible:
+
+launch ec2 instance
+
+setup hostname
+
+create ansadmin user
+
+add users to sudoers file - visudo shift+g end of file
+
+generate ssh keys  ssh-keygen
+
+enable password auth
+
+vi /etc/ssh/sshd_config
+
+service sshd reload
+
+install ansible
+
+integrate docker with ansible
+
+on docker:
+create ansadmin
+add ansadmin to sudoers files
+enable passwordbased auth
+
+On ansible:
+Add hosts file etc/ansible/hosts
+copy ssh keys ssh-copy-id privateip
+test connection         ansible all -m ping
+
+ansible all -m command -a uptime
+
+uptime
+
+integrate with jenkins
+
+ansible - check /etc/group
+
+yum install docker
+
+usermod -aG docker ansadmin
+
+service docker status
+
+sudo service docker start
+
+vi Dockerfile
+
+during build - give correct permission - /var/run/docker.sock
+
+chmod 777
+
+ansible-playbook -i 
+
+cat /etc/ansible/hosts
+add ansible server to inventory
+ansible all -m command -a uptime
+ssh-copy-id ansibleserverip
+and 
+ssh-copy-id localhost
+
+vi app.yml
+
+---
+- hosts: ansible
+  become: true - want to run as a root user
+  
+  tasks: 
+  - name: create docker image
+    command: docker build -t app . or -f path
+	args: 
+	 chdir: /opt/docker
+	 
+ansible-playbook app.yml --check
+
+dockerhub account
+
+login to ansible server with dockerhub account
+docker login
+docker push image:tag cannot recognize
+
+docker tag imageid username/image:latest
+
+new image will be created
+
+docker push username/image:latest
